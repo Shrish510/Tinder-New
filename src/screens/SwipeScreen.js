@@ -24,11 +24,41 @@ const SwipeScreen = () => {
     return (
       <View style={styles.card}>
         <Image source={{ uri: card.image }} style={styles.image} />
+
+        {/* Adjusted bottom overlay for user info and action buttons */}
         <View style={styles.overlay}>
-          <Text style={styles.nameAge}>{card.name}, {card.age}</Text>
-          <View style={styles.locationRow}>
-            <MaterialCommunityIcons name="map-marker" size={16} color="white" />
-            <Text style={styles.distance}>{card.distance} km away</Text>
+          <View style={styles.userInfoContainer}>
+            <View style={styles.nearbyTag}>
+              <MaterialCommunityIcons name="map-marker-outline" size={14} color="white" />
+              <Text style={styles.nearbyText}>Nearby</Text>
+            </View>
+            <View style={styles.nameRow}>
+              <Text style={styles.nameAge}>{card.name} {card.age}</Text>
+              <MaterialCommunityIcons name="arrow-up-circle" size={24} color="white" style={styles.upArrow} />
+            </View>
+            <View style={styles.locationRow}>
+              <MaterialCommunityIcons name="map-marker" size={16} color="white" />
+              <Text style={styles.distance}>{card.distance} km away</Text>
+            </View>
+          </View>
+
+          {/* Action Buttons specific to the card bottom */}
+          <View style={styles.cardBottomActions}>
+            <TouchableOpacity style={styles.actionButtonCross}>
+              <MaterialCommunityIcons name="close" size={36} color="#E5566D" />
+            </TouchableOpacity>
+
+            <View style={styles.messageInputContainer}>
+              <Text style={styles.messageInputText}>Send message...</Text>
+            </View>
+
+            <TouchableOpacity style={styles.actionButtonStar}>
+              <MaterialCommunityIcons name="star" size={24} color="#3AB4CC" />
+            </TouchableOpacity>
+
+            <TouchableOpacity style={styles.actionButtonHeart}>
+              <MaterialCommunityIcons name="heart" size={36} color="#4CCC93" />
+            </TouchableOpacity>
           </View>
         </View>
       </View>
@@ -36,9 +66,20 @@ const SwipeScreen = () => {
   };
 
   return (
-    <View style={[styles.container, { paddingTop: insets.top }]}>
-      <View style={styles.header}>
-        <MaterialCommunityIcons name="fire" size={32} color="#FF4565" />
+    <View style={styles.container}>
+      {/* Top Navigation Bar Overlay */}
+      <View style={[styles.topNavOverlay, { paddingTop: insets.top + 10 }]}>
+        <TouchableOpacity style={styles.filterButton}>
+          <MaterialCommunityIcons name="tune" size={24} color="white" />
+        </TouchableOpacity>
+        <View style={styles.topNavTabs}>
+          <Text style={[styles.topNavTab, styles.topNavTabActive]}>For You</Text>
+          <Text style={styles.topNavTab}>Double Date</Text>
+          <Text style={styles.topNavTab}>Astrology</Text>
+        </View>
+        <TouchableOpacity style={styles.lightningButton}>
+          <MaterialCommunityIcons name="lightning-bolt" size={20} color="#A65BF1" />
+        </TouchableOpacity>
       </View>
 
       {cards.length > 0 ? (
@@ -51,7 +92,8 @@ const SwipeScreen = () => {
           cardIndex={0}
           backgroundColor={'transparent'}
           stackSize={3}
-          cardVerticalMargin={20}
+          cardVerticalMargin={0}
+          cardHorizontalMargin={0}
           containerStyle={styles.swiperContainer}
           overlayLabels={{
             left: {
@@ -79,14 +121,6 @@ const SwipeScreen = () => {
         </View>
       )}
 
-      {/* Action Buttons (Rewind, Nope, Super Like, Like, Boost) */}
-      <View style={styles.bottomActions}>
-        <TouchableOpacity style={styles.smallButton}><MaterialCommunityIcons name="rewind" size={24} color="#F5B748" /></TouchableOpacity>
-        <TouchableOpacity style={styles.largeButton}><MaterialCommunityIcons name="close" size={32} color="#E5566D" /></TouchableOpacity>
-        <TouchableOpacity style={styles.smallButton}><MaterialCommunityIcons name="star" size={24} color="#3AB4CC" /></TouchableOpacity>
-        <TouchableOpacity style={styles.largeButton}><MaterialCommunityIcons name="heart" size={32} color="#4CCC93" /></TouchableOpacity>
-        <TouchableOpacity style={styles.smallButton}><MaterialCommunityIcons name="lightning-bolt" size={24} color="#A65BF1" /></TouchableOpacity>
-      </View>
     </View>
   );
 };
@@ -96,47 +130,153 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#111111',
   },
+  topNavOverlay: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    zIndex: 10,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingHorizontal: 15,
+    paddingBottom: 15,
+    backgroundColor: 'rgba(0,0,0,0.3)',
+  },
+  filterButton: {
+    padding: 5,
+  },
+  topNavTabs: {
+    flexDirection: 'row',
+    gap: 15,
+  },
+  topNavTab: {
+    color: 'rgba(255,255,255,0.6)',
+    fontSize: 16,
+    fontWeight: '600',
+  },
+  topNavTabActive: {
+    color: 'white',
+  },
+  lightningButton: {
+    backgroundColor: '#2A2A2A',
+    width: 32,
+    height: 32,
+    borderRadius: 16,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
   header: {
     alignItems: 'center',
     paddingVertical: 10,
   },
   swiperContainer: {
     flex: 1,
+    backgroundColor: 'transparent'
   },
   card: {
-    height: height * 0.65,
-    borderRadius: 15,
+    height: height,
+    width: width,
     overflow: 'hidden',
     backgroundColor: '#222',
   },
   image: {
     width: '100%',
     height: '100%',
+    resizeMode: 'cover'
   },
   overlay: {
     position: 'absolute',
     bottom: 0,
     left: 0,
     right: 0,
-    padding: 20,
-    paddingTop: 60,
-    // Add gradient in real app for readability
-    backgroundColor: 'rgba(0,0,0,0.4)',
+    paddingTop: 80,
+    paddingBottom: 90, // Avoid overlap with bottom tab bar
+    paddingHorizontal: 15,
+    backgroundColor: 'rgba(0,0,0,0.5)',
+  },
+  userInfoContainer: {
+    marginBottom: 20,
+  },
+  nearbyTag: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#1E9D8B',
+    alignSelf: 'flex-start',
+    paddingHorizontal: 8,
+    paddingVertical: 4,
+    borderRadius: 12,
+    marginBottom: 8,
+  },
+  nearbyText: {
+    color: 'white',
+    fontSize: 12,
+    fontWeight: 'bold',
+    marginLeft: 4,
+  },
+  nameRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
   },
   nameAge: {
     color: 'white',
-    fontSize: 28,
+    fontSize: 32,
     fontWeight: 'bold',
+  },
+  upArrow: {
+    marginLeft: 10,
   },
   locationRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginTop: 5,
+    marginTop: 4,
   },
   distance: {
     color: 'white',
+    fontSize: 14,
+    marginLeft: 4,
+  },
+  cardBottomActions: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+  },
+  actionButtonCross: {
+    width: 60,
+    height: 60,
+    borderRadius: 30,
+    backgroundColor: '#2A2A2A',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  actionButtonHeart: {
+    width: 60,
+    height: 60,
+    borderRadius: 30,
+    backgroundColor: '#2A2A2A',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  actionButtonStar: {
+    width: 44,
+    height: 44,
+    borderRadius: 22,
+    backgroundColor: '#2A2A2A',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  messageInputContainer: {
+    flex: 1,
+    height: 50,
+    backgroundColor: 'rgba(255,255,255,0.2)',
+    borderRadius: 25,
+    justifyContent: 'center',
+    paddingHorizontal: 20,
+    marginHorizontal: 10,
+  },
+  messageInputText: {
+    color: 'white',
     fontSize: 16,
-    marginLeft: 5,
   },
   noMoreCards: {
     flex: 1,
@@ -146,35 +286,6 @@ const styles = StyleSheet.create({
   noMoreText: {
     color: 'gray',
   },
-  bottomActions: {
-    flexDirection: 'row',
-    justifyContent: 'space-evenly',
-    alignItems: 'center',
-    paddingVertical: 15,
-    position: 'absolute',
-    bottom: 10,
-    width: '100%',
-  },
-  smallButton: {
-    width: 44,
-    height: 44,
-    borderRadius: 22,
-    backgroundColor: '#222',
-    justifyContent: 'center',
-    alignItems: 'center',
-    borderWidth: 1,
-    borderColor: '#333',
-  },
-  largeButton: {
-    width: 60,
-    height: 60,
-    borderRadius: 30,
-    backgroundColor: '#222',
-    justifyContent: 'center',
-    alignItems: 'center',
-    borderWidth: 1,
-    borderColor: '#333',
-  }
 });
 
 export default SwipeScreen;
