@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { View, Text, StyleSheet, Image, Dimensions, TouchableOpacity } from 'react-native';
 import Swiper from 'react-native-deck-swiper';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
+import { LinearGradient } from 'expo-linear-gradient';
 import { mainSwipeProfiles } from '../data/mockData';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
@@ -26,15 +27,18 @@ const SwipeScreen = () => {
         <Image source={{ uri: card.image }} style={styles.image} />
 
         {/* Adjusted bottom overlay for user info and action buttons */}
-        <View style={styles.overlay}>
+        <LinearGradient colors={['transparent', 'rgba(0,0,0,0.8)', 'rgba(0,0,0,1)']} style={styles.overlay}>
           <View style={styles.userInfoContainer}>
-            <View style={styles.nearbyTag}>
-              <MaterialCommunityIcons name="map-marker-outline" size={14} color="white" />
-              <Text style={styles.nearbyText}>Nearby</Text>
+            <View style={styles.activeTag}>
+
+              <Text style={styles.activeText}>Active</Text>
             </View>
             <View style={styles.nameRow}>
-              <Text style={styles.nameAge}>{card.name} {card.age}</Text>
-              <MaterialCommunityIcons name="arrow-up-circle" size={24} color="white" style={styles.upArrow} />
+              <View style={{flexDirection: "row", alignItems: "center"}}>
+                <Text style={styles.nameAge}>{card.name} {card.age}</Text>
+                <MaterialCommunityIcons name="check-decagram" size={24} color="#1D9BF0" style={{marginLeft: 8}} />
+              </View>
+              <MaterialCommunityIcons name="arrow-up-circle" size={28} color="white" style={styles.upArrow} />
             </View>
             <View style={styles.locationRow}>
               <MaterialCommunityIcons name="map-marker" size={16} color="white" />
@@ -42,25 +46,30 @@ const SwipeScreen = () => {
             </View>
           </View>
 
+
           {/* Action Buttons specific to the card bottom */}
           <View style={styles.cardBottomActions}>
-            <TouchableOpacity style={styles.actionButtonCross}>
+            <TouchableOpacity style={styles.actionButtonSmall}>
+              <MaterialCommunityIcons name="backup-restore" size={24} color="#777" />
+            </TouchableOpacity>
+
+            <TouchableOpacity style={styles.actionButtonLarge}>
               <MaterialCommunityIcons name="close" size={36} color="#E5566D" />
             </TouchableOpacity>
 
-            <View style={styles.messageInputContainer}>
-              <Text style={styles.messageInputText}>Send message...</Text>
-            </View>
-
-            <TouchableOpacity style={styles.actionButtonStar}>
+            <TouchableOpacity style={styles.actionButtonSmall}>
               <MaterialCommunityIcons name="star" size={24} color="#3AB4CC" />
             </TouchableOpacity>
 
-            <TouchableOpacity style={styles.actionButtonHeart}>
+            <TouchableOpacity style={styles.actionButtonLarge}>
               <MaterialCommunityIcons name="heart" size={36} color="#4CCC93" />
             </TouchableOpacity>
+
+            <TouchableOpacity style={styles.actionButtonSmall}>
+              <MaterialCommunityIcons name="send" size={24} color="#1D9BF0" style={{transform: [{rotate: '-45deg'}], marginLeft: 4, marginBottom: 4}} />
+            </TouchableOpacity>
           </View>
-        </View>
+</LinearGradient>
       </View>
     );
   };
@@ -190,33 +199,32 @@ const styles = StyleSheet.create({
     bottom: 0,
     left: 0,
     right: 0,
-    paddingTop: 80,
-    paddingBottom: 90, // Avoid overlap with bottom tab bar
+    paddingTop: 120,
+    paddingBottom: 90,
     paddingHorizontal: 15,
-    backgroundColor: 'rgba(0,0,0,0.5)',
   },
   userInfoContainer: {
     marginBottom: 20,
   },
-  nearbyTag: {
+  activeTag: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#1E9D8B',
+    backgroundColor: 'white',
     alignSelf: 'flex-start',
-    paddingHorizontal: 8,
+    paddingHorizontal: 12,
     paddingVertical: 4,
     borderRadius: 12,
     marginBottom: 8,
   },
-  nearbyText: {
-    color: 'white',
-    fontSize: 12,
+  activeText: {
+    color: '#0E855D',
+    fontSize: 14,
     fontWeight: 'bold',
-    marginLeft: 4,
   },
   nameRow: {
     flexDirection: 'row',
     alignItems: 'center',
+    justifyContent: 'space-between',
   },
   nameAge: {
     color: 'white',
@@ -224,7 +232,6 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   upArrow: {
-    marginLeft: 10,
   },
   locationRow: {
     flexDirection: 'row',
@@ -241,7 +248,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-between',
   },
-  actionButtonCross: {
+  actionButtonLarge: {
     width: 60,
     height: 60,
     borderRadius: 30,
@@ -249,34 +256,13 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
-  actionButtonHeart: {
-    width: 60,
-    height: 60,
-    borderRadius: 30,
-    backgroundColor: '#2A2A2A',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  actionButtonStar: {
+  actionButtonSmall: {
     width: 44,
     height: 44,
     borderRadius: 22,
     backgroundColor: '#2A2A2A',
     justifyContent: 'center',
     alignItems: 'center',
-  },
-  messageInputContainer: {
-    flex: 1,
-    height: 50,
-    backgroundColor: 'rgba(255,255,255,0.2)',
-    borderRadius: 25,
-    justifyContent: 'center',
-    paddingHorizontal: 20,
-    marginHorizontal: 10,
-  },
-  messageInputText: {
-    color: 'white',
-    fontSize: 16,
   },
   noMoreCards: {
     flex: 1,
